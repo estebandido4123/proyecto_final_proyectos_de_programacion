@@ -1,0 +1,39 @@
+# Archivos de entorno (Credenciales y configuración local)
+.env
+.env.backup
+.env.dev
+
+# Dependencias de Composer
+/vendor/
+
+# Directorios de escritura dinámicos de CodeIgniter 4
+/writable/cache/
+/writable/logs/
+/writable/session/
+/writable/uploads/
+/writable/debugbar/
+
+# Mantener la estructura de las carpetas writable vacías en el repositorio
+!/writable/cache/.gitkeep
+!/writable/logs/.gitkeep
+!/writable/session/.gitkeep
+!/writable/uploads/.gitkeep
+!/writable/debugbar/.gitkeep
+
+# Dependencias de Node (Si estás usando NPM/Yarn para assets como Bootstrap)
+node_modules/
+
+# Archivos de compilación y minificación (Opcional según tu flujo)
+/public/css/*.min.css
+/public/js/*.min.js
+/build/
+
+# Archivos de configuración de IDEs y editores
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
