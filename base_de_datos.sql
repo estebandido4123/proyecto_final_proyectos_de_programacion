@@ -1,5 +1,6 @@
 
-Create database if not exists 
+Create database if not exists biblioteca_nh;
+use biblioteca_nh;
 
 
 -- Creación de la tabla Usuarios
