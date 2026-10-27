@@ -1,46 +1,14 @@
-<?php
-
-namespace App\Models;
+<?php namespace App\Models;
 
 use CodeIgniter\Model;
 
 class LibrosAutoresModel extends Model
 {
-    protected $table            = 'librosautores';
-    protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
-    protected $useSoftDeletes   = false;
-    protected $protectFields    = true;
-    protected $allowedFields    = [];
-
-    protected bool $allowEmptyInserts = false;
-    protected bool $updateOnlyChanged = true;
-
-    protected array $casts = [];
-    protected array $castHandlers = [];
-
-    // Dates
-    protected $useTimestamps = false;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
-
-    // Validation
-    protected $validationRules      = [];
-    protected $validationMessages   = [];
-    protected $skipValidation       = false;
-    protected $cleanValidationRules = true;
-
-    // Callbacks
-    protected $allowCallbacks = true;
-    protected $beforeInsert   = [];
-    protected $afterInsert    = [];
-    protected $beforeUpdate   = [];
-    protected $afterUpdate    = [];
-    protected $beforeFind     = [];
-    protected $afterFind      = [];
-    protected $beforeDelete   = [];
-    protected $afterDelete    = [];
+    protected $table      = 'libros_autores';
+    // CodeIgniter 4 maneja llaves primarias compuestas de forma limitada en su Model base.
+    // Para esta tabla pivote, se omiten los métodos que requieren $primaryKey o se usa Query Builder.
+    protected $allowedFields = [
+        'id_libro',
+        'id_autor'
+    ];
 }
