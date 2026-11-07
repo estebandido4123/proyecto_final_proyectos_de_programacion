@@ -3,15 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Biblioteca</title>
+    <title>Inicio de Sesión - Biblioteca Escolar</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <style>
+        :root {
+            --navy-border: #1b2a4a;
+            --navy-text: #0f172a;
+            --navy-muted: #334155;
+            --btn-bg: #4a6fa5;
+            --btn-hover: #3b5984;
+            --bg-light: #f8fafc;
+        }
+
         body, html {
             height: 100%;
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f8f9fa;
-            color: #495057;
+            background-color: var(--bg-light);
+            color: var(--navy-text);
         }
 
         .login-wrapper {
@@ -19,72 +28,74 @@
             display: flex;
         }
 
-        /* Columna de Formulario */
+        /* Columna Izquierda: Formulario */
         .login-section {
             background-color: #ffffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             padding: 3rem 4rem;
+            border-right: 1.5px solid rgba(27, 42, 74, 0.15);
         }
 
         .brand-header {
-            font-size: 1.1rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-            margin-bottom: 4rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--navy-border);
+            margin-bottom: 3.5rem;
+            text-transform: uppercase;
         }
 
         .login-title {
-            font-size: 1.75rem;
+            font-size: 1.85rem;
             font-weight: 700;
-            color: #212529;
-            margin-bottom: 0.25rem;
+            color: var(--navy-text);
+            margin-bottom: 0.35rem;
         }
 
         .login-subtitle {
             font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 2rem;
+            color: var(--navy-muted);
+            margin-bottom: 2.25rem;
         }
 
-        /* Estilo Minimalista para Inputs floating/outlined */
+        /* Formulario con bordes marinos */
         .form-floating-custom {
             position: relative;
             margin-bottom: 1.5rem;
+        }
+
+        .form-floating-custom label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--navy-border);
+            margin-bottom: 0.4rem;
         }
 
         .form-floating-custom input {
             width: 100%;
             padding: 0.75rem 1rem;
             font-size: 0.95rem;
-            border: 1px solid #dee2e6;
+            border: 1.5px solid rgba(27, 42, 74, 0.25);
             border-radius: 8px;
             outline: none;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
             background-color: #ffffff;
-            color: #212529;
+            color: var(--navy-text);
         }
 
         .form-floating-custom input:focus {
-            border-color: #b3c5ea;
-            box-shadow: 0 0 0 4px rgba(179, 197, 234, 0.25);
-        }
-
-        .form-floating-custom label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6c757d;
-            margin-bottom: 0.4rem;
+            border-color: var(--navy-border);
+            box-shadow: 0 0 0 3px rgba(27, 42, 74, 0.12);
         }
 
         .btn-custom {
-            background-color: #7b9acc;
-            border: none;
+            background-color: var(--btn-bg);
+            border: 1.5px solid var(--navy-border);
             color: #ffffff;
             padding: 0.8rem;
             font-weight: 600;
@@ -94,23 +105,80 @@
         }
 
         .btn-custom:hover {
-            background-color: #6887b8;
+            background-color: var(--btn-hover);
             color: #ffffff;
         }
 
-        /* Columna de Arte/Decoración Visual */
-        .art-section {
-            background: linear-gradient(135deg, #e3eeff 0%, #f3e7e9 50%, #e3eeff 100%);
-            position: relative;
-            overflow: hidden;
+        /* Columna Derecha: Carrusel con Fondos Degradados Más Intensos */
+        .carousel-section {
+            padding: 0;
+            height: 100vh;
         }
 
-        .art-graphic {
-            width: 100%;
+        .carousel, .carousel-inner, .carousel-item {
             height: 100%;
-            opacity: 0.6;
-            background: radial-gradient(circle at 30% 30%, rgba(186, 215, 233, 0.8), transparent 50%),
-                        radial-gradient(circle at 70% 70%, rgba(227, 207, 222, 0.8), transparent 50%);
+        }
+
+        /* Degradados pastel vivos */
+        .slide-bg-1 {
+            background: linear-gradient(135deg, #a8c0ff 0%, #fbc2eb 100%);
+        }
+
+        .slide-bg-2 {
+            background: linear-gradient(135deg, #a8e6cf 0%, #88d8b0 50%, #9be15d 100%);
+        }
+
+        .slide-bg-3 {
+            background: linear-gradient(135deg, #ffb199 0%, #ff0844 100%);
+        }
+
+        .carousel-caption-custom {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 4rem;
+            text-align: center;
+        }
+
+        /* Frases limpias sobre fondo transparente */
+        .carousel-text-box {
+            background: transparent;
+            max-width: 540px;
+        }
+
+        .carousel-text-box h3 {
+            color: #1e293b;
+            font-weight: 800;
+            font-size: 2.1rem;
+            margin-bottom: 1.25rem;
+            letter-spacing: -0.5px;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.4);
+        }
+
+        .carousel-text-box p {
+            color: #334155;
+            font-size: 1.05rem;
+            line-height: 1.6;
+            margin: 0;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
+        }
+
+        .carousel-indicators [data-bs-target] {
+            background-color: #1e293b;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin: 0 5px;
+            opacity: 0.4;
+        }
+
+        .carousel-indicators .active {
+            opacity: 0.9;
+            width: 22px;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -122,16 +190,16 @@
         <!-- Panel Izquierdo: Formulario -->
         <div class="col-12 col-md-6 col-lg-5 login-section">
             <div class="brand-header">
-                BIBLIOTECA ESCOLAR
+                Biblioteca Escolar Virtual
             </div>
 
             <div class="w-100" style="max-width: 380px; margin: 0 auto;">
                 <h2 class="login-title">Ingreso al Sistema</h2>
                 <p class="login-subtitle">Introduce tus credenciales para acceder</p>
 
-                <!-- Bloque de visualización de errores -->
+                <!-- Bloque de errores en la sesión -->
                 <?php if(session()->getFlashdata('error')): ?>
-                    <div class="alert alert-danger text-center py-2 mb-4" style="font-size: 0.875rem; border-radius: 8px;">
+                    <div class="alert alert-danger text-center py-2 mb-4" style="font-size: 0.875rem; border: 1px solid rgba(27, 42, 74, 0.2); border-radius: 8px;">
                         <?= session()->getFlashdata('error') ?>
                     </div>
                 <?php endif; ?>
@@ -156,9 +224,50 @@
             </div>
         </div>
 
-        <!-- Panel Derecho: Fondo Ilustrativo Pastel Minimalista -->
-        <div class="col-md-6 col-lg-7 d-none d-md-block art-section">
-            <div class="art-graphic"></div>
+        <!-- Panel Derecho: Carrusel de frases dinámicas sin recuadros -->
+        <div class="col-md-6 col-lg-7 d-none d-md-block carousel-section">
+            <div id="loginCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+                
+                <div class="carousel-indicators mb-4">
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Frase 1"></button>
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="1" aria-label="Frase 2"></button>
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="2" aria-label="Frase 3"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    
+                    <!-- Slide 1 -->
+                    <div class="carousel-item active slide-bg-1">
+                        <div class="carousel-caption-custom">
+                            <div class="carousel-text-box">
+                                <h3>Bienvenido a la Biblioteca Virtual</h3>
+                                <p>Un espacio creado para descubrir nuevos conocimientos y acompañarte en cada etapa de tu aprendizaje.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 2 -->
+                    <div class="carousel-item slide-bg-2">
+                        <div class="carousel-caption-custom">
+                            <div class="carousel-text-box">
+                                <h3>Explora y Aprende</h3>
+                                <p>Accede a nuestro catálogo de lecturas y recursos digitales organizados para enriquecer cada clase.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 3 -->
+                    <div class="carousel-item slide-bg-3">
+                        <div class="carousel-caption-custom">
+                            <div class="carousel-text-box">
+                                <h3>Lectura a tu Alcance</h3>
+                                <p>Gestiona y asigna libros de manera sencilla y ordenada en un entorno pensado para la comunidad escolar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
         </div>
 
     </div>

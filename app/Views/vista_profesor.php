@@ -219,14 +219,14 @@
         BIBLIOTECA ESCOLAR &mdash; PANEL DE PROFESOR
     </div>
     <div class="d-flex align-items-center gap-3">
-        <span class="text-muted small">Profesor: <?= session()->get('nombres') ?></span>
+        <span class="text-muted small">Profesor: <?= esc(session()->get('nombres')) ?></span>
         <a href="<?= base_url('LoginController/salir') ?>" class="btn btn-outline-custom">Cerrar Sesión</a>
     </div>
 </nav>
 
 <div class="container-fluid px-4 py-4">
 
-    <!-- Mensajes de Estado Flashdata -->
+    <!-- Mensajes Flashdata de Notificación -->
     <?php if(session()->getFlashdata('mensaje')): ?>
         <div class="alert alert-success text-center border-0 shadow-sm mb-4" style="border-radius: 12px;">
             <?= session()->getFlashdata('mensaje') ?>
@@ -266,7 +266,7 @@
         </div>
     </div>
 
-    <!-- Catálogo de Libros en Tarjetas -->
+    <!-- Renderizado Dinámico del Catálogo de Libros -->
     <div class="row g-4">
         <?php if(!empty($libros)): ?>
             <?php foreach($libros as $libro): ?>
@@ -293,12 +293,12 @@
                     </div>
                 </div>
 
-                <!-- Modal de Detalle y Operaciones del Libro -->
+                <!-- Modal para cada Libro recuperado de la BD -->
                 <div class="modal fade" id="modalLibro<?= $libro['id_libro'] ?>" tabindex="-1" aria-hidden="true">
                     <div class="modal-dialog modal-lg modal-dialog-centered">
                         <div class="modal-content modal-content-custom">
                             <div class="modal-header-custom d-flex justify-content-between align-items-center">
-                                <h5 class="m-0 fw-bold">Información de la Obra</h5>
+                                <h5 class="m-0 fw-bold">Información del Libro</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -319,17 +319,16 @@
                                             <span><?= esc($libro['nombre_grado'] ?? 'Todos los grados') ?></span>
                                         </div>
                                         <div class="detail-box">
-                                            <label class="label-custom">Estado Actual</label>
-                                            <span><?= $libro['disponible'] ? 'Ejemplar Disponible' : 'Prestado / En uso' ?></span>
+                                            <label class="label-custom">Estado del Ejemplar</label>
+                                            <span><?= $libro['disponible'] ? 'Disponible para Préstamo' : 'Prestado actualmente' ?></span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <hr class="my-4">
 
-                                <!-- Pestañas u Opciones de Asignación / Devolución -->
                                 <div class="row">
-                                    <!-- Formulario de Asignación -->
+                                    <!-- Formulario de Asignación a Estudiante -->
                                     <div class="col-12 col-md-6 border-end pe-md-4">
                                         <h6 class="fw-bold mb-3">Asignar a Estudiante</h6>
                                         <?php if($libro['disponible']): ?>
@@ -349,7 +348,7 @@
                                                 <button type="submit" class="btn btn-pastel-primary w-100">Confirmar Asignación</button>
                                             </form>
                                         <?php else: ?>
-                                            <p class="text-muted small">No hay ejemplares disponibles para realizar una nueva asignación.</p>
+                                            <p class="text-muted small">No hay ejemplares disponibles de esta obra para asignar.</p>
                                         <?php endif; ?>
                                     </div>
 
@@ -359,12 +358,12 @@
                                         <?php if(!empty($libro['prestamos_activos'])): ?>
                                             <form action="<?= base_url('profesor/devolverLibro') ?>" method="POST">
                                                 <div class="mb-3">
-                                                    <label class="label-custom" for="prestamo">Préstamos Activos</label>
+                                                    <label class="label-custom" for="prestamo">Estudiantes con Préstamo Activo</label>
                                                     <select class="form-select form-select-custom" name="id_prestamo" required>
                                                         <option value="">Seleccionar Alumno / Ejemplar</option>
                                                         <?php foreach($libro['prestamos_activos'] as $p): ?>
                                                             <option value="<?= $p['id_prestamo'] ?>">
-                                                                <?= esc($p['nombres'] . ' ' . $p['apellidos']) ?> (Prestado: <?= $p['fecha_prestamo'] ?>)
+                                                                <?= esc($p['nombres'] . ' ' . $p['apellidos']) ?> (F. Préstamo: <?= $p['fecha_prestamo'] ?>)
                                                             </option>
                                                         <?php endforeach; ?>
                                                     </select>
@@ -373,7 +372,7 @@
                                                 <button type="submit" class="btn btn-pastel-secondary w-100">Registrar Devolución</button>
                                             </form>
                                         <?php else: ?>
-                                            <p class="text-muted small">Este libro no registra préstamos activos en este momento.</p>
+                                            <p class="text-muted small">Este libro no tiene devoluciones pendientes.</p>
                                         <?php endif; ?>
                                     </div>
                                 </div>

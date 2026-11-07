@@ -28,7 +28,7 @@ class ProfesorController extends BaseController
 
         // 2. Asociar a cada libro la disponibilidad de sus ejemplares físicos y préstamos activos
         foreach ($libros as &$libro) {
-            // Contar ejemplares disponibles
+            // Obtener el primer ejemplar disponible (disponibilidad = 1)
             $ejemplarDisponible = $db->table('ejemplares_fisicos')
                 ->where('id_libro', $libro['id_libro'])
                 ->where('disponibilidad', 1)
@@ -50,7 +50,7 @@ class ProfesorController extends BaseController
             $libro['prestamos_activos'] = $queryPrestamos->getResultArray();
         }
 
-        // 3. Obtener listado de estudiantes (id_rol = 2) y grados para los modales
+        // 3. Obtener listado de estudiantes (id_rol = 2) y grados para los selectores
         $estudiantes = $db->table('usuarios')->where('id_rol', 2)->get()->getResultArray();
         $grados = $db->table('grados')->get()->getResultArray();
 
@@ -80,7 +80,7 @@ class ProfesorController extends BaseController
 
         $db = \Config\Database::connect();
 
-        // Insertar registro en la tabla de prestamos
+        // Insertar registro en la tabla de préstamos
         $db->table('prestamos')->insert([
             'id_usuario'     => $id_usuario,
             'id_ejemplar'    => $id_ejemplar,
@@ -107,7 +107,6 @@ class ProfesorController extends BaseController
 
         $db = \Config\Database::connect();
 
-        // Obtener el ejemplar prestado
         $prestamo = $db->table('prestamos')->where('id_prestamo', $id_prestamo)->get()->getRowArray();
 
         if ($prestamo) {
