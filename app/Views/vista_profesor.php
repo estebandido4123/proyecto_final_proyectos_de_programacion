@@ -239,16 +239,16 @@
         </div>
     <?php endif; ?>
 
-    <!-- Buscador y Filtros -->
+    <!-- Buscador y Filtros Activos -->
     <div class="search-card">
         <div class="row g-3">
             <div class="col-12 col-md-6">
-                <label class="label-custom">Buscar Libro</label>
-                <input type="text" class="form-control form-control-custom" placeholder="Buscar por título o autor...">
+                <label class="label-custom" for="filter-text">Buscar Libro</label>
+                <input type="text" id="filter-text" class="form-control form-control-custom" placeholder="Buscar por título o autor...">
             </div>
             <div class="col-12 col-sm-6 col-md-3">
-                <label class="label-custom">Grado Destinado</label>
-                <select class="form-select form-select-custom">
+                <label class="label-custom" for="filter-grado">Grado Destinado</label>
+                <select id="filter-grado" class="form-select form-select-custom">
                     <option value="">Todos los grados</option>
                     <?php foreach($grados as $g): ?>
                         <option value="<?= $g['id_grado'] ?>"><?= esc($g['nombre_grado']) ?></option>
@@ -256,8 +256,8 @@
                 </select>
             </div>
             <div class="col-12 col-sm-6 col-md-3">
-                <label class="label-custom">Estado</label>
-                <select class="form-select form-select-custom">
+                <label class="label-custom" for="filter-estado">Estado</label>
+                <select id="filter-estado" class="form-select form-select-custom">
                     <option value="">Todos los estados</option>
                     <option value="disponible">Disponible</option>
                     <option value="prestado">Prestado</option>
@@ -267,10 +267,20 @@
     </div>
 
     <!-- Renderizado Dinámico del Catálogo de Libros -->
-    <div class="row g-4">
+    <div class="row g-4" id="books-container">
         <?php if(!empty($libros)): ?>
             <?php foreach($libros as $libro): ?>
-                <div class="col-12 col-sm-6 col-md-4">
+                <?php 
+                    $estadoLibro = $libro['disponible'] ? 'disponible' : 'prestado';
+                    $idGrado = $libro['id_grado'] ?? '';
+                ?>
+                <!-- Columna contenedora con data-attributes para filtrado de JavaScript -->
+                <div class="col-12 col-sm-6 col-md-4 book-item" 
+                     data-titulo="<?= strtolower(esc($libro['titulo'])) ?>" 
+                     data-autor="<?= strtolower(esc($libro['autores'] ?? '')) ?>" 
+                     data-grado="<?= esc($idGrado) ?>" 
+                     data-estado="<?= $estadoLibro ?>">
+                    
                     <div class="book-card">
                         <div>
                             <div class="book-visual">
@@ -389,10 +399,64 @@
             </div>
         <?php endif; ?>
     </div>
+
+    <!-- Mensaje dinámico cuando ningún libro coincide con los filtros -->
+    <div id="no-results-msg" class="text-center py-5 text-muted d-none">
+        No se encontraron libros que coincidan con los filtros seleccionados.
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+
+<!-- Script de Filtrado Dinámico -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const filterText = document.getElementById('filter-text');
+    const filterGrado = document.getElementById('filter-grado');
+    const filterEstado = document.getElementById('filter-estado');
+    const bookItems = document.querySelectorAll('.book-item');
+    const noResultsMsg = document.getElementById('no-results-msg');
+
+    function applyFilters() {
+        const textValue = filterText.value.toLowerCase().trim();
+        const gradoValue = filterGrado.value;
+        const estadoValue = filterEstado.value;
+        let visibleCount = 0;
+
+        bookItems.forEach(function (item) {
+            const title = item.getAttribute('data-titulo') || '';
+            const author = item.getAttribute('data-autor') || '';
+            const grado = item.getAttribute('data-grado') || '';
+            const estado = item.getAttribute('data-estado') || '';
+
+            // Validación individual de cada filtro
+            const matchesText = textValue === '' || title.includes(textValue) || author.includes(textValue);
+            const matchesGrado = gradoValue === '' || grado === gradoValue;
+            const matchesEstado = estadoValue === '' || estado === estadoValue;
+
+            if (matchesText && matchesGrado && matchesEstado) {
+                item.classList.remove('d-none');
+                visibleCount++;
+            } else {
+                item.classList.add('d-none');
+            }
+        });
+
+        // Mostrar o ocultar el aviso si la búsqueda no arroja resultados
+        if (visibleCount === 0 && bookItems.length > 0) {
+            noResultsMsg.classList.remove('d-none');
+        } else {
+            noResultsMsg.classList.add('d-none');
+        }
+    }
+
+    // Escuchar eventos de cambio en los tres controles
+    filterText.addEventListener('input', applyFilters);
+    filterGrado.addEventListener('change', applyFilters);
+    filterEstado.addEventListener('change', applyFilters);
+});
+</script>
 
 </body>
 </html>
