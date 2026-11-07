@@ -10,26 +10,45 @@ class AdministradorController extends BaseController
     {
         $session = session();
         
-        // CORRECCIÓN: Se utiliza el operador || en lugar de \vert{}\vert{}
         if (!$session->get('logged_in') || $session->get('id_rol') != 1) {
             return redirect()->to(base_url('/'))->with('error', 'Acceso denegado');
         }
 
         $usuariosModel = new UsuariosModel();
         $gradosModel = new GradosModel();
-        
-        // Consultar libros y unir con la tabla de grados para obtener el nombre del grado
         $db = \Config\Database::connect();
+        
+        // Consultar libros
         $builder = $db->table('catalogo_libros');
         $builder->select('catalogo_libros.*, grados.nombre_grado');
         $builder->join('grados', 'grados.id_grado = catalogo_libros.id_grado', 'left');
         $libros = $builder->get()->getResultArray();
 
+        // Consultar ejemplares físicos para el modal de préstamos
+        $builderE = $db->table('ejemplares_fisicos');
+        $builderE->select('ejemplares_fisicos.id_ejemplar, catalogo_libros.titulo');
+        $builderE->join('catalogo_libros', 'catalogo_libros.id_libro = ejemplares_fisicos.id_libro', 'left');
+        $ejemplares = $builderE->get()->getResultArray();
+
+        // Consultar préstamos con JOIN a usuarios y ejemplares/libros
+        $prestamos = [];
+        if ($db->tableExists('prestamos')) {
+            $builderP = $db->table('prestamos');
+            $builderP->select('prestamos.*, usuarios.nombres, usuarios.apellidos, catalogo_libros.titulo');
+            $builderP->join('usuarios', 'usuarios.id_usuario = prestamos.id_usuario', 'left');
+            $builderP->join('ejemplares_fisicos', 'ejemplares_fisicos.id_ejemplar = prestamos.id_ejemplar', 'left');
+            $builderP->join('catalogo_libros', 'catalogo_libros.id_libro = ejemplares_fisicos.id_libro', 'left');
+            $prestamos = $builderP->get()->getResultArray();
+        }
+
         $data = [
             'profesores'  => $usuariosModel->where('id_rol', 3)->findAll(),
             'estudiantes' => $usuariosModel->where('id_rol', 2)->findAll(),
+            'usuarios'    => $usuariosModel->whereIn('id_rol', [2, 3])->findAll(), // Para elegir a quién prestar
             'libros'      => $libros,
-            'grados'      => $gradosModel->findAll() // Extraemos los grados para los <select> de los modales
+            'grados'      => $gradosModel->findAll(),
+            'ejemplares'  => $ejemplares,
+            'prestamos'   => $prestamos
         ];
         
         return view('vista_administrador', $data);
@@ -124,5 +143,38 @@ class AdministradorController extends BaseController
         $librosModel = new CatalogoLibrosModel();
         $librosModel->delete($id_libro);
         return redirect()->to(base_url('admin/inicio'))->with('mensaje', 'Libro eliminado del catálogo');
+    }
+
+    // =====================================
+    // CRUD PRÉSTAMOS
+    // =====================================
+    public function agregarPrestamo()
+    {
+        $db = \Config\Database::connect();
+        $data = [
+            'id_ejemplar'    => $this->request->getPost('id_ejemplar'),
+            'id_usuario'     => $this->request->getPost('id_usuario'),
+            'fecha_prestamo' => date('Y-m-d'),
+            'fecha_devolucion' => null
+        ];
+        
+        $db->table('prestamos')->insert($data);
+        return redirect()->to(base_url('admin/inicio'))->with('mensaje', 'Préstamo registrado exitosamente');
+    }
+
+    public function devolverPrestamo($id_prestamo)
+    {
+        $db = \Config\Database::connect();
+        $db->table('prestamos')->where('id_prestamo', $id_prestamo)->update([
+            'fecha_devolucion' => date('Y-m-d')
+        ]);
+        return redirect()->to(base_url('admin/inicio'))->with('mensaje', 'Libro marcado como devuelto');
+    }
+
+    public function eliminarPrestamo($id_prestamo)
+    {
+        $db = \Config\Database::connect();
+        $db->table('prestamos')->where('id_prestamo', $id_prestamo)->delete();
+        return redirect()->to(base_url('admin/inicio'))->with('mensaje', 'Registro de préstamo eliminado');
     }
 }

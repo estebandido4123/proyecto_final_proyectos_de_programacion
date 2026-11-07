@@ -35,19 +35,18 @@
 
 <div class="container-fluid px-4">
     
-    <!-- Alertas de éxito -->
+    <!-- Alertas -->
     <?php if(session()->getFlashdata('mensaje')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('mensaje') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
-    <!-- Alertas de error -->
     <?php if(session()->getFlashdata('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('error') ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
     <?php endif; ?>
 
@@ -56,9 +55,10 @@
         <div class="col-md-3 col-lg-2 mb-4">
             <div class="card card-custom p-3">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                    <button class="nav-link active mb-2 text-start" id="v-pills-libros-tab" data-bs-toggle="pill" data-bs-target="#v-pills-libros" type="button" role="tab" aria-controls="v-pills-libros" aria-selected="true"><i class="bi bi-book me-2"></i> Gestión de Libros</button>
-                    <button class="nav-link mb-2 text-start" id="v-pills-profesores-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profesores" type="button" role="tab" aria-controls="v-pills-profesores" aria-selected="false"><i class="bi bi-person-video3 me-2"></i> Profesores</button>
-                    <button class="nav-link mb-2 text-start" id="v-pills-estudiantes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-estudiantes" type="button" role="tab" aria-controls="v-pills-estudiantes" aria-selected="false"><i class="bi bi-people me-2"></i> Estudiantes</button>
+                    <button class="nav-link active mb-2 text-start" id="v-pills-libros-tab" data-bs-toggle="pill" data-bs-target="#v-pills-libros" type="button" role="tab"><i class="bi bi-book me-2"></i> Libros</button>
+                    <button class="nav-link mb-2 text-start" id="v-pills-prestamos-tab" data-bs-toggle="pill" data-bs-target="#v-pills-prestamos" type="button" role="tab"><i class="bi bi-journal-bookmark me-2"></i> Préstamos</button>
+                    <button class="nav-link mb-2 text-start" id="v-pills-profesores-tab" data-bs-toggle="pill" data-bs-target="#v-pills-profesores" type="button" role="tab"><i class="bi bi-person-video3 me-2"></i> Profesores</button>
+                    <button class="nav-link mb-2 text-start" id="v-pills-estudiantes-tab" data-bs-toggle="pill" data-bs-target="#v-pills-estudiantes" type="button" role="tab"><i class="bi bi-people me-2"></i> Estudiantes</button>
                 </div>
             </div>
         </div>
@@ -92,6 +92,51 @@
                                     </tr>
                                     <?php endforeach; else: ?>
                                     <tr><td colspan="4" class="text-center text-muted">No hay libros en el catálogo</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pestaña Préstamos -->
+                <div class="tab-pane fade" id="v-pills-prestamos" role="tabpanel">
+                    <div class="card card-custom p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-secondary m-0">Gestión de Préstamos</h4>
+                            <button type="button" class="btn btn-custom-blue" data-bs-toggle="modal" data-bs-target="#modalPrestamo"><i class="bi bi-plus-lg"></i> Registrar Préstamo</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-pastel align-middle">
+                                <thead>
+                                    <tr><th>ID</th><th>Ejemplar / Libro</th><th>Usuario</th><th>Fecha Préstamo</th><th>Estado</th><th class="text-center">Acciones</th></tr>
+                                </thead>
+                                <tbody>
+                                    <?php if(!empty($prestamos)): foreach($prestamos as $prestamo): ?>
+                                    <tr>
+                                        <td><?= $prestamo['id_prestamo'] ?></td>
+                                        <td>
+                                            <small class="text-muted">ID Ejemplar: <?= $prestamo['id_ejemplar'] ?></small><br>
+                                            <?= $prestamo['titulo'] ?>
+                                        </td>
+                                        <td><?= $prestamo['nombres'] . ' ' . $prestamo['apellidos'] ?></td>
+                                        <td><?= $prestamo['fecha_prestamo'] ?></td>
+                                        <td>
+                                            <?php if(empty($prestamo['fecha_devolucion'])): ?>
+                                                <span class="badge bg-warning text-dark">Prestado</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-success">Devuelto (<?= $prestamo['fecha_devolucion'] ?>)</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-center">
+                                            <?php if(empty($prestamo['fecha_devolucion'])): ?>
+                                                <a href="<?= base_url('admin/devolverPrestamo/'.$prestamo['id_prestamo']) ?>" class="btn btn-sm btn-outline-success me-1" title="Marcar como Devuelto"><i class="bi bi-check2-circle"></i></a>
+                                            <?php endif; ?>
+                                            <a href="<?= base_url('admin/eliminarPrestamo/'.$prestamo['id_prestamo']) ?>" class="btn btn-sm btn-outline-danger" title="Eliminar" onclick="return confirm('¿Eliminar este registro?');"><i class="bi bi-trash3"></i></a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; else: ?>
+                                    <tr><td colspan="6" class="text-center text-muted">No hay préstamos registrados</td></tr>
                                     <?php endif; ?>
                                 </tbody>
                             </table>
@@ -172,6 +217,41 @@
 </div>
 
 <!-- ================= MODALES ================= -->
+
+<!-- Modal Añadir Préstamo -->
+<div class="modal fade" id="modalPrestamo" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0"><h5 class="modal-title text-secondary">Registrar Préstamo</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form action="<?= base_url('admin/agregarPrestamo') ?>" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Ejemplar Físico a Prestar</label>
+                        <select name="id_ejemplar" class="form-select" required>
+                            <option value="" selected disabled>Seleccione un ejemplar...</option>
+                            <?php if(!empty($ejemplares)): foreach($ejemplares as $ejem): ?>
+                                <option value="<?= $ejem['id_ejemplar'] ?>">ID: <?= $ejem['id_ejemplar'] ?> - <?= $ejem['titulo'] ?></option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Prestar a (Usuario)</label>
+                        <select name="id_usuario" class="form-select" required>
+                            <option value="" selected disabled>Seleccione un profesor o estudiante...</option>
+                            <?php if(!empty($usuarios)): foreach($usuarios as $user): ?>
+                                <option value="<?= $user['id_usuario'] ?>"><?= $user['nombres'] . ' ' . $user['apellidos'] ?> (<?= $user['id_rol'] == 2 ? 'Estudiante' : 'Profesor' ?>)</option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-custom-blue">Registrar Préstamo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!-- Modal Añadir Libro -->
 <div class="modal fade" id="modalLibro" tabindex="-1" aria-hidden="true">
@@ -291,7 +371,7 @@
     </div>
 </div>
 
-<!-- Modal Editar Usuario (Unificado) -->
+<!-- Modal Editar Usuario -->
 <div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -327,7 +407,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
-<!-- Script para pasar datos al modal de edición de Usuario -->
 <script>
     var modalEditar = document.getElementById('modalEditarUsuario');
     if (modalEditar) {
@@ -349,10 +428,7 @@
             }
         });
     }
-</script>
 
-<!-- Script para pasar datos al modal de edición de Libro -->
-<script>
     var modalEditarLibro = document.getElementById('modalEditarLibro');
     if (modalEditarLibro) {
         modalEditarLibro.addEventListener('show.bs.modal', function (event) {
@@ -366,4 +442,4 @@
     }
 </script>
 </body>
-</html><
+</html>
