@@ -19,3 +19,8 @@ $routes->get('admin/inicio', 'AdministradorController::index');
 $routes->post('admin/agregarUsuario', 'AdministradorController::agregarUsuario');
 $routes->post('admin/editarUsuario', 'AdministradorController::editarUsuario');
 $routes->get('admin/eliminarUsuario/(:num)', 'AdministradorController::eliminarUsuario/$1');
+
+// Operaciones CRUD Libros
+$routes->post('admin/agregarLibro', 'AdministradorController::agregarLibro');
+$routes->post('admin/editarLibro', 'AdministradorController::editarLibro');
+$routes->get('admin/eliminarLibro/(:num)', 'AdministradorController::eliminarLibro/$1');

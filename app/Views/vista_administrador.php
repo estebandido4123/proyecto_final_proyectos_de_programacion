@@ -35,7 +35,7 @@
 
 <div class="container-fluid px-4">
     
-<!-- Alertas de éxito -->
+    <!-- Alertas de éxito -->
     <?php if(session()->getFlashdata('mensaje')): ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('mensaje') ?>
@@ -43,7 +43,7 @@
         </div>
     <?php endif; ?>
 
-    <!-- Alertas de error (NUEVO) -->
+    <!-- Alertas de error -->
     <?php if(session()->getFlashdata('error')): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <?= session()->getFlashdata('error') ?>
@@ -72,9 +72,30 @@
                     <div class="card card-custom p-4">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h4 class="text-secondary m-0">Catálogo de Libros</h4>
-                            <button type="button" class="btn btn-custom-blue"><i class="bi bi-plus-lg"></i> Añadir Libro</button>
+                            <button type="button" class="btn btn-custom-blue" data-bs-toggle="modal" data-bs-target="#modalLibro"><i class="bi bi-plus-lg"></i> Añadir Libro</button>
                         </div>
-                        <p class="text-muted">Módulo en construcción...</p>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-pastel align-middle">
+                                <thead>
+                                    <tr><th>ID</th><th>Título</th><th>Grado Recomendado</th><th class="text-center">Acciones</th></tr>
+                                </thead>
+                                <tbody>
+                                    <?php if(!empty($libros)): foreach($libros as $libro): ?>
+                                    <tr>
+                                        <td><?= $libro['id_libro'] ?></td>
+                                        <td><?= $libro['titulo'] ?></td>
+                                        <td><?= $libro['nombre_grado'] ?? '<span class="badge bg-secondary">Uso General</span>' ?></td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-secondary me-1" data-bs-toggle="modal" data-bs-target="#modalEditarLibro" data-id="<?= $libro['id_libro'] ?>" data-titulo="<?= $libro['titulo'] ?>" data-grado="<?= $libro['id_grado'] ?>" title="Editar"><i class="bi bi-pencil-square"></i></button>
+                                            <a href="<?= base_url('admin/eliminarLibro/'.$libro['id_libro']) ?>" class="btn btn-sm btn-outline-danger" title="Eliminar" onclick="return confirm('¿Estás seguro de eliminar este libro?');"><i class="bi bi-trash3"></i></a>
+                                        </td>
+                                    </tr>
+                                    <?php endforeach; else: ?>
+                                    <tr><td colspan="4" class="text-center text-muted">No hay libros en el catálogo</td></tr>
+                                    <?php endif; ?>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
@@ -152,6 +173,67 @@
 
 <!-- ================= MODALES ================= -->
 
+<!-- Modal Añadir Libro -->
+<div class="modal fade" id="modalLibro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0"><h5 class="modal-title text-secondary">Registrar Nuevo Libro</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form action="<?= base_url('admin/agregarLibro') ?>" method="POST">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Título del Libro</label>
+                        <input type="text" name="titulo" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Grado Recomendado (Opcional)</label>
+                        <select name="id_grado" class="form-select">
+                            <option value="">Para todos los grados (Uso General)</option>
+                            <?php if(!empty($grados)): foreach($grados as $grado): ?>
+                                <option value="<?= $grado['id_grado'] ?>"><?= $grado['nombre_grado'] ?></option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-custom-blue">Guardar Libro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Libro -->
+<div class="modal fade" id="modalEditarLibro" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0"><h5 class="modal-title text-secondary">Editar Libro</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <form action="<?= base_url('admin/editarLibro') ?>" method="POST">
+                <div class="modal-body">
+                    <input type="hidden" name="id_libro" id="edit_id_libro">
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Título del Libro</label>
+                        <input type="text" name="titulo" id="edit_titulo_libro" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Grado Recomendado (Opcional)</label>
+                        <select name="id_grado" id="edit_grado_libro" class="form-select">
+                            <option value="">Para todos los grados (Uso General)</option>
+                            <?php if(!empty($grados)): foreach($grados as $grado): ?>
+                                <option value="<?= $grado['id_grado'] ?>"><?= $grado['nombre_grado'] ?></option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-custom-blue">Actualizar Libro</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <!-- Modal Añadir Profesor -->
 <div class="modal fade" id="modalProfesor" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -188,7 +270,15 @@
                         <div class="col-md-6 mb-3"><label class="form-label text-muted">Nombres</label><input type="text" name="nombres" class="form-control" required></div>
                         <div class="col-md-6 mb-3"><label class="form-label text-muted">Apellidos</label><input type="text" name="apellidos" class="form-control" required></div>
                     </div>
-                    <div class="mb-3"><label class="form-label text-muted">ID Grado</label><input type="number" name="id_grado" class="form-control" required></div>
+                    <div class="mb-3">
+                        <label class="form-label text-muted">Grado</label>
+                        <select name="id_grado" class="form-select" required>
+                            <option value="" selected disabled>Seleccione un grado...</option>
+                            <?php if(!empty($grados)): foreach($grados as $grado): ?>
+                                <option value="<?= $grado['id_grado'] ?>"><?= $grado['nombre_grado'] ?></option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
                     <div class="mb-3"><label class="form-label text-muted">Nombre de Usuario</label><input type="text" name="nombre_usuario" class="form-control" required></div>
                     <div class="mb-3"><label class="form-label text-muted">Contraseña</label><input type="password" name="contrasena" class="form-control" required></div>
                 </div>
@@ -213,7 +303,15 @@
                         <div class="col-md-6 mb-3"><label class="form-label text-muted">Nombres</label><input type="text" name="nombres" id="edit_nombres" class="form-control" required></div>
                         <div class="col-md-6 mb-3"><label class="form-label text-muted">Apellidos</label><input type="text" name="apellidos" id="edit_apellidos" class="form-control" required></div>
                     </div>
-                    <div class="mb-3" id="div_edit_grado" style="display: none;"><label class="form-label text-muted">ID Grado</label><input type="number" name="id_grado" id="edit_id_grado" class="form-control"></div>
+                    <div class="mb-3" id="div_edit_grado" style="display: none;">
+                        <label class="form-label text-muted">Grado</label>
+                        <select name="id_grado" id="edit_id_grado" class="form-select">
+                            <option value="">Seleccione un grado...</option>
+                            <?php if(!empty($grados)): foreach($grados as $grado): ?>
+                                <option value="<?= $grado['id_grado'] ?>"><?= $grado['nombre_grado'] ?></option>
+                            <?php endforeach; endif; ?>
+                        </select>
+                    </div>
                     <div class="mb-3"><label class="form-label text-muted">Nombre de Usuario</label><input type="text" name="nombre_usuario" id="edit_nombre_usuario" class="form-control" required></div>
                     <div class="mb-3"><label class="form-label text-muted">Nueva Contraseña <small>(Opcional)</small></label><input type="password" name="contrasena" class="form-control"></div>
                 </div>
@@ -229,27 +327,43 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
-<!-- Script para pasar datos al modal de edición -->
+<!-- Script para pasar datos al modal de edición de Usuario -->
 <script>
     var modalEditar = document.getElementById('modalEditarUsuario');
-    modalEditar.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        document.getElementById('edit_id_usuario').value = button.getAttribute('data-id');
-        document.getElementById('edit_nombres').value = button.getAttribute('data-nombres');
-        document.getElementById('edit_apellidos').value = button.getAttribute('data-apellidos');
-        document.getElementById('edit_nombre_usuario').value = button.getAttribute('data-usuario');
-        
-        var grado = button.getAttribute('data-grado');
-        var divGrado = document.getElementById('div_edit_grado');
-        if(grado) {
-            document.getElementById('edit_id_grado').value = grado;
-            divGrado.style.display = 'block';
-        } else {
-            document.getElementById('edit_id_grado').value = '';
-            divGrado.style.display = 'none';
-        }
-    });
+    if (modalEditar) {
+        modalEditar.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            document.getElementById('edit_id_usuario').value = button.getAttribute('data-id');
+            document.getElementById('edit_nombres').value = button.getAttribute('data-nombres');
+            document.getElementById('edit_apellidos').value = button.getAttribute('data-apellidos');
+            document.getElementById('edit_nombre_usuario').value = button.getAttribute('data-usuario');
+            
+            var grado = button.getAttribute('data-grado');
+            var divGrado = document.getElementById('div_edit_grado');
+            if (grado) {
+                document.getElementById('edit_id_grado').value = grado;
+                divGrado.style.display = 'block';
+            } else {
+                document.getElementById('edit_id_grado').value = '';
+                divGrado.style.display = 'none';
+            }
+        });
+    }
 </script>
 
+<!-- Script para pasar datos al modal de edición de Libro -->
+<script>
+    var modalEditarLibro = document.getElementById('modalEditarLibro');
+    if (modalEditarLibro) {
+        modalEditarLibro.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            document.getElementById('edit_id_libro').value = button.getAttribute('data-id');
+            document.getElementById('edit_titulo_libro').value = button.getAttribute('data-titulo');
+            
+            var grado = button.getAttribute('data-grado');
+            document.getElementById('edit_grado_libro').value = grado ? grado : '';
+        });
+    }
+</script>
 </body>
 </html>

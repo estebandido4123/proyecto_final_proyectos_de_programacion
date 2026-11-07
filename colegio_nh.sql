@@ -21,7 +21,7 @@ SET time_zone = "+00:00";
 -- Base de datos: `colegio_nh`
 --
 Create database if not exists colegio_nh;
-use colegio_n
+use colegio_nh;
 -- --------------------------------------------------------
 
 --
