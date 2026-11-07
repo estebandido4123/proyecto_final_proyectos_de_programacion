@@ -180,6 +180,21 @@
             width: 22px;
             border-radius: 4px;
         }
+
+        .img-placeholder {
+            width: 100%;
+            max-width: 400px;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.4);
+            border: 2px dashed rgba(255, 255, 255, 0.6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            color: #334155;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -232,6 +247,7 @@
                     <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Frase 1"></button>
                     <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="1" aria-label="Frase 2"></button>
                     <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="2" aria-label="Frase 3"></button>
+                    <button type="button" data-bs-target="#loginCarousel" data-bs-slide-to="3" aria-label="Equipo"></button>
                 </div>
 
                 <div class="carousel-inner">
@@ -262,6 +278,23 @@
                             <div class="carousel-text-box">
                                 <h3>Lectura a tu Alcance</h3>
                                 <p>Gestiona y asigna libros de manera sencilla y ordenada en un entorno pensado para la comunidad escolar.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4: Equipo de Desarrollo -->
+                    <div class="carousel-item slide-bg-1"> <!-- Puedes cambiar la clase de fondo si lo deseas -->
+                        <div class="carousel-caption-custom">
+                            <div class="carousel-text-box">
+                                <h3>Equipo de Desarrollo</h3>
+                                
+                                <!-- Espacio para la imagen -->
+                                <div class="img-placeholder">
+                                   <img src="assets/img/vivi_and_me.jpeg" alt="" class="img" style="width:100%; height:100%;">
+                                </div>
+
+                                <p class="mb-2"><strong>201900209</strong> - Francisco Javier Godoy Espinoza</p>
+                                <p><strong>202402334</strong> - Vivian Yesenia Chet Chacach</p>
                             </div>
                         </div>
                     </div>
