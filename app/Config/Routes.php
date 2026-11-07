@@ -35,5 +35,5 @@ $routes->get('profesor/inicio', 'ProfesorController::index');
 $routes->post('profesor/asignarLibro', 'ProfesorController::asignarLibro');
 $routes->post('profesor/devolverLibro', 'ProfesorController::devolverLibro');
 
-
+$routes->get('estudiante/inicio', 'EstudianteController::index');
 
