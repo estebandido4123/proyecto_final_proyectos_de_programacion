@@ -25,6 +25,7 @@ class LoginController extends BaseController
                 'id_usuario'     => $datosUsuario['id_usuario'],
                 'nombre_usuario' => $datosUsuario['nombre_usuario'],
                 'nombres'        => $datosUsuario['nombres'],
+                'apellidos'      => $datosUsuario['apellidos'],
                 'id_rol'         => $datosUsuario['id_rol'],
                 'logged_in'      => true
             ]);
@@ -32,9 +33,9 @@ class LoginController extends BaseController
             if ($datosUsuario['id_rol'] == 1) { 
                 return redirect()->to(base_url('admin/inicio'));
             } else if ($datosUsuario['id_rol'] == 2) { 
-                return view('vista_estudiante'); 
+                // CORRECCIÓN: Redirige al controlador en lugar de cargar la vista vacía
+                return redirect()->to(base_url('estudiante/inicio')); 
             } else if ($datosUsuario['id_rol'] == 3) { 
-                // Redirige al controlador del profesor para que ejecute la consulta SQL y cargue los libros
                 return redirect()->to(base_url('profesor/inicio')); 
             }
 
