@@ -290,7 +290,7 @@
                                 
                                 <!-- Espacio para la imagen -->
                                 <div class="img-placeholder">
-                                   <img src="assets/img/vivi_and_me.jpeg" alt="" class="img" style="width:100%; height:100%;">
+                                   <img src="assets/img/vivi_and_me.jpeg" alt="" class="img" style="width:100%; height:100%;    ">
                                 </div>
 
                                 <p class="mb-2"><strong>201900209</strong> - Francisco Javier Godoy Espinoza</p>
