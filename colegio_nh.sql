@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 07-11-2026 a las 07:29:52
+-- Tiempo de generación: 07-11-2026 a las 19:47:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,8 +20,7 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `colegio_nh`
 --
-Create database if not exists colegio_nh;
-use colegio_n
+
 -- --------------------------------------------------------
 
 --
@@ -48,6 +47,20 @@ CREATE TABLE `autores` (
   `nombre_completo` varchar(150) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `autores`
+--
+
+INSERT INTO `autores` (`id_autor`, `nombre_completo`) VALUES
+(4, 'Antoine de Saint-Exupéry'),
+(5, 'Ernesto Sabato'),
+(3, 'Gabriel García Márquez'),
+(8, 'Hermann Hesse'),
+(6, 'Isabel Allende'),
+(7, 'Mario Benedetti'),
+(2, 'Mary Shelley'),
+(1, 'Robert Fisher');
+
 -- --------------------------------------------------------
 
 --
@@ -59,6 +72,22 @@ CREATE TABLE `catalogo_libros` (
   `titulo` varchar(200) NOT NULL,
   `id_grado` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `catalogo_libros`
+--
+
+INSERT INTO `catalogo_libros` (`id_libro`, `titulo`, `id_grado`) VALUES
+(1, 'El caballero de la armadura oxidada', 2),
+(2, 'Frankenstein o el moderno prometeo', 1),
+(3, 'El búho que no podía ulular', 3),
+(4, 'El coronel no tiene quien le escriba', 3),
+(5, 'Cien años de soledad', 4),
+(6, 'El principito', 2),
+(7, 'El túnel', 4),
+(8, 'La casa de los espíritus', 4),
+(9, 'La tregua', 1),
+(10, 'Siddhartha', 1);
 
 -- --------------------------------------------------------
 
@@ -72,6 +101,22 @@ CREATE TABLE `ejemplares_fisicos` (
   `codigo_interno` varchar(50) NOT NULL,
   `disponibilidad` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ejemplares_fisicos`
+--
+
+INSERT INTO `ejemplares_fisicos` (`id_ejemplar`, `id_libro`, `codigo_interno`, `disponibilidad`) VALUES
+(1, 1, 'LIB-001-A', 1),
+(2, 2, 'LIB-002-A', 1),
+(3, 3, 'LIB-003-A', 1),
+(4, 4, 'LIB-004-A', 1),
+(5, 5, 'LIB-005-A', 1),
+(6, 6, 'LIB-006-A', 1),
+(7, 7, 'LIB-007-A', 1),
+(8, 8, 'LIB-008-A', 1),
+(9, 9, 'LIB-009-A', 1),
+(10, 10, 'LIB-010-A', 1);
 
 -- --------------------------------------------------------
 
@@ -89,7 +134,10 @@ CREATE TABLE `grados` (
 --
 
 INSERT INTO `grados` (`id_grado`, `nombre_grado`) VALUES
-(1, '3ro Básico');
+(2, '1ro Básico'),
+(3, '2do Básico'),
+(1, '3ro Básico'),
+(4, '4to Bachillerato en Ciencias y Letras');
 
 -- --------------------------------------------------------
 
@@ -115,6 +163,22 @@ CREATE TABLE `libros_autores` (
   `id_libro` int(11) NOT NULL,
   `id_autor` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `libros_autores`
+--
+
+INSERT INTO `libros_autores` (`id_libro`, `id_autor`) VALUES
+(1, 1),
+(2, 2),
+(3, 1),
+(4, 3),
+(5, 3),
+(6, 4),
+(7, 5),
+(8, 6),
+(9, 7),
+(10, 8);
 
 -- --------------------------------------------------------
 
@@ -267,25 +331,25 @@ ALTER TABLE `asistencias`
 -- AUTO_INCREMENT de la tabla `autores`
 --
 ALTER TABLE `autores`
-  MODIFY `id_autor` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_autor` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `catalogo_libros`
 --
 ALTER TABLE `catalogo_libros`
-  MODIFY `id_libro` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_libro` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `ejemplares_fisicos`
 --
 ALTER TABLE `ejemplares_fisicos`
-  MODIFY `id_ejemplar` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_ejemplar` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `grados`
 --
 ALTER TABLE `grados`
-  MODIFY `id_grado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_grado` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `justificaciones`

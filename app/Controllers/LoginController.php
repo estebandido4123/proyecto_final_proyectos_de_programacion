@@ -34,7 +34,8 @@ class LoginController extends BaseController
             } else if ($datosUsuario['id_rol'] == 2) { 
                 return view('vista_estudiante'); 
             } else if ($datosUsuario['id_rol'] == 3) { 
-                return view('vista_profesor'); 
+                // Redirige al controlador del profesor para que ejecute la consulta SQL y cargue los libros
+                return redirect()->to(base_url('profesor/inicio')); 
             }
 
         } else {

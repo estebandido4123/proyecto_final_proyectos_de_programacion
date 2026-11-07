@@ -24,3 +24,13 @@ $routes->get('admin/eliminarUsuario/(:num)', 'AdministradorController::eliminarU
 $routes->post('admin/agregarLibro', 'AdministradorController::agregarLibro');
 $routes->post('admin/editarLibro', 'AdministradorController::editarLibro');
 $routes->get('admin/eliminarLibro/(:num)', 'AdministradorController::eliminarLibro/$1');
+
+
+
+
+// Ruta para el inicio del panel de profesor
+$routes->get('profesor/inicio', 'ProfesorController::index');
+
+// Rutas de acciones de la biblioteca escolar (Asignación y Devolución)
+$routes->post('profesor/asignarLibro', 'ProfesorController::asignarLibro');
+$routes->post('profesor/devolverLibro', 'ProfesorController::devolverLibro');
