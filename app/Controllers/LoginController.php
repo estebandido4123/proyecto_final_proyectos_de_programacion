@@ -7,25 +7,19 @@ class LoginController extends BaseController
 {
     public function index()
     {
-        // Carga la vista inicial del login
         return view('login');
     }
 
     public function autenticar()
     {
-        $usuario = $this->request->getPost('nombre_usuario');
-        $contrasena = $this->request->getPost('contrasena');
+        $usuario =$this->request->getPost('nombre_usuario');
+        $contrasena =$this->request->getPost('contrasena');
 
-        $usuariosModel = new UsuariosModel();
-        // Buscar el usuario en la base de datos
-        $datosUsuario = $usuariosModel->where('nombre_usuario', $usuario)->first();
+        $usuariosModel = new UsuariosModel();$datosUsuario = $usuariosModel->where('nombre_usuario',$usuario)->first();
 
-        // Verificar si el usuario existe y si la contraseña coincide
-        if ($datosUsuario && password_verify($contrasena, $datosUsuario['contrasena'])) {
+        if ($datosUsuario && password_verify($contrasena,$datosUsuario['contrasena'])) {
             
-            // Iniciar sesión y guardar datos del usuario
-            $session = session();
-            $session->set([
+            $session = session();$session->set([
                 'id_usuario'     => $datosUsuario['id_usuario'],
                 'nombre_usuario' => $datosUsuario['nombre_usuario'],
                 'nombres'        => $datosUsuario['nombres'],
@@ -33,30 +27,41 @@ class LoginController extends BaseController
                 'logged_in'      => true
             ]);
 
-            // Cargar directamente las vistas correspondientes según el rol
+            // Cargar vistas según el rol
             if ($datosUsuario['id_rol'] == 1) { 
-                // Carga vista_administrador.php
-                return view('vista_administrador'); 
-            } else if ($datosUsuario['id_rol'] == 2) { 
-                // Carga vista_estudiante.php
-                return view('vista_estudiante'); 
-            } else if ($datosUsuario['id_rol'] == 3) { 
-                // Carga vista_profesor.php
+                
+                // Extraer profesores (rol 3) y estudiantes (rol 2)
+                $data = [
+                    'profesores'  => $usuariosModel->where('id_rol', 3)->findAll(),
+                    'estudiantes' => $usuariosModel->where('id_rol', 2)->findAll()
+                ];
+                
+                return view('vista_administrador', $data);
+                
+            } else if ($datosUsuario['id_rol'] == 2) { return view('vista_estudiante'); } else if ($datosUsuario['id_rol'] == 3) { 
                 return view('vista_profesor'); 
             }
 
         } else {
-            // Regresar al formulario con un mensaje de error si falla
             return redirect()->back()->with('error', 'Usuario o contraseña incorrectos');
         }
     }
     
-public function salir()
+    public function salir()
     {
-        $session = session();
-        $session->destroy();
-        // Cambiar 'LoginController' por '/' para ir a la página principal
-        return redirect()->to(base_url('/')); 
+        $session = session();$session->destroy();
+        return redirect()->to(base_url('/'));
     }
 
+    // Mantengo esta función por si necesitas resetear las claves en el futuro
+    public function generarClave()
+    {
+        $usuariosModel = new \App\Models\UsuariosModel();$nuevaContrasena = password_hash('password123', PASSWORD_BCRYPT);
+        
+        $usuariosModel->where('nombre_usuario', 'admin')->set(['contrasena' =>$nuevaContrasena])->update();
+        $usuariosModel->where('nombre_usuario', 'vchet')->set(['contrasena' =>$nuevaContrasena])->update();
+        $usuariosModel->where('nombre_usuario', 'pgustavo')->set(['contrasena' =>$nuevaContrasena])->update();
+                      
+        echo "Contraseñas actualizadas con éxito a: password123. Ya puedes ir al login.";
+    }
 }
